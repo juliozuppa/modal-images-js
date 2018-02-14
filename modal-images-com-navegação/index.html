@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <style>
+        .images {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .images:hover {
+            opacity: 0.7;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (image) */
+        #modalImage {
+            margin: auto;
+            display: block;
+        }
+
+        /* Caption of Modal Image */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        /* Add Animation */
+        #modalImage, #caption {
+            -webkit-animation-name: zoom;
+            -webkit-animation-duration: 0.6s;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        /* Next & previous buttons */
+        #prev,
+        #next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        /* On hover, add a black background color with a little bit see-through */
+        #prev:hover,
+        #next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        @-webkit-keyframes zoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0)
+            }
+            to {
+                transform: scale(1)
+            }
+        }
+
+        /* The Close Button */
+        #close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        #close:hover,
+        #close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 100% Image Width on Smaller Screens */
+        @media only screen and (max-width: 700px) {
+            #modalImage {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Image Modal</h2>
+
+<div class="container">
+    <img class="images" data-hd="01.jpg" data-img-number="1" src="01_th.jpg" alt="Descrição Teste 1">
+    <img class="images" data-hd="02.jpg" data-img-number="2" src="02_th.jpg" alt="Descrição Teste 2">
+</div>
+
+<!-- The Modal -->
+<div id="modal-container" class="modal">
+    <span id="close">&times;</span>
+    <div id="modal-content">
+        <img id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <a id="prev">&#10094;</a>
+    <a id="next">&#10095;</a>
+</div>
+
+<script>
+
+    (function () {
+
+        var modal = $('#modal-container'),
+            modalContent = $('#modal-content');
+        var images = $('.images'),
+            modalImage = $("#modalImage"),
+            captionText = $("#caption"),
+            slideIndex = 1,
+            btnClose = $("#close"),
+            btnNext = $('#next'),
+            btnPrev = $('#prev');
+
+        var move = function (n) {
+            if (n < 0) {
+                slideIndex -= 1;
+                slideIndex = (slideIndex < 1) ? images.length : slideIndex;
+            } else {
+                slideIndex += 1;
+                slideIndex = (slideIndex > images.length) ? 1 : slideIndex;
+            }
+        };
+
+        var currentSlide = function (n) {
+            slideIndex = n;
+        };
+
+        var getImage = function (n) {
+            return $('.images[data-img-number="' + n + '"]');
+        };
+
+        var showImage = function (element) {
+            modalImage.attr('src', $(element).data('hd'));
+            captionText.html($(element).attr('alt'));
+            currentSlide($(element).data('img-number'));
+        };
+
+        $(document).ready(function () {
+
+            images.each(function (k, img) {
+                $(img).click(function (event) {
+                    event.preventDefault();
+                    modal.show();
+                    showImage(img);
+                });
+            });
+
+            btnClose.click(function (event) {
+                event.preventDefault();
+                modal.hide();
+            });
+
+            modalContent.click(function (event) {
+                event.preventDefault();
+                modal.hide();
+            });
+
+            btnPrev.click(function (event) {
+                event.preventDefault();
+                move(-1);
+                showImage(getImage(slideIndex));
+            });
+
+            btnNext.click(function (event) {
+                event.preventDefault();
+                move(1);
+                showImage(getImage(slideIndex));
+            });
+
+        });
+    })();
+
+
+</script>
+
+</body>
+</html>
+
+
